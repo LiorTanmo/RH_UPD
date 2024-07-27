@@ -1,0 +1,92 @@
+spring:
+  profiles:
+    active: deploy
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/TestNewsDB
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show_sql: true
+    defer-datasource-initialization: true
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  sql:
+    init:
+      mode: always
+      data-locations: src/main/resources/sql/data.sql
+
+  output:
+     ansi:
+       enabled: always
+
+JWT_secret: very_secret_secret
+
+
+
+logging:
+  file:
+    name: /logs/develop/application.log
+
+  logback:
+    rollingpolicy:
+      max-history: 10
+      max-file-size: 10MB
+  level:
+    org.hibernate: info
+    root: warn
+    com.lior.application.rh_test.controllers : info
+    com.lior.application.rh_test.aspect : info
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+    file: "%d %p %c{1.} [%t] %m%n"
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: deploy
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/NewsDB
+    username: postgres
+    password: postgres
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+      show_sql: true
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+JWT_secret: very_secret_secret
+
+logging:
+  logback:
+    rollingpolicy:
+      max-history: 10
+      max-file-size: 10MB
+  level:
+    org.hibernate: warn
+    root: warn
+    com.lior.application.rh_test.services : info
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"
+    file: "%d %p %c{1.} [%t] %m%n"
+  file:
+    name: /logs/deploy/application.log
